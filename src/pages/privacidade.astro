@@ -1,11 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import Rodape from '../components/Rodape.astro';
-import { marcar } from '../data/pendente';
-import { site } from '../data/site';
+import { site, linkWhatsApp } from '../data/site';
 
-const contato = '[PREENCHER: e-mail ou outro canal para pedidos sobre dados pessoais]';
-const atualizacao = '[PREENCHER: data da última atualização]';
+const atualizacao = '12 de outubro de 2026';
 ---
 
 <Base
@@ -15,7 +13,7 @@ const atualizacao = '[PREENCHER: data da última atualização]';
   <main class="politica">
     <a class="voltar" href="/">Voltar para o site</a>
     <h1>Política de privacidade</h1>
-    <p class="atualizacao" set:html={`Última atualização: ${marcar(atualizacao)}`} />
+    <p class="atualizacao">Última atualização: {atualizacao}</p>
 
     <h2>O que este site coleta</h2>
     <p>
@@ -43,7 +41,12 @@ const atualizacao = '[PREENCHER: data da última atualização]';
     <p>
       Pela Lei Geral de Proteção de Dados (LGPD), você pode pedir acesso, correção ou exclusão dos seus dados pessoais.
     </p>
-    <p set:html={`Responsável: ${site.nome}, ${site.profissao}, ${site.coren}. Contato: ${marcar(contato)}`} />
+    <p>
+      Responsável: {site.nome}, {site.profissao}, {site.coren}. Para pedidos sobre seus dados, fale pelo{' '}
+      <a href={linkWhatsApp('Olá, Rose! Tenho um pedido sobre meus dados pessoais.')} target="_blank" rel="noopener"
+        >WhatsApp {site.whatsappExibicao}</a
+      >.
+    </p>
   </main>
   <Rodape />
 </Base>
