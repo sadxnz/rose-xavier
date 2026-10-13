@@ -1,5 +1,5 @@
 ---
-import { regioes } from '../data/regioes';
+import { procedimentos } from '../data/conteudo';
 import { site } from '../data/site';
 ---
 
@@ -20,7 +20,7 @@ import { site } from '../data/site';
         <label for="f-interesse">O que você quer avaliar</label>
         <select id="f-interesse" name="interesse">
           <option value="">Ainda não sei, quero conversar</option>
-          {regioes.map((r) => <option value={r.nome}>{r.nome}</option>)}
+          {procedimentos.map((p) => <option value={p.nome}>{p.nome}</option>)}
         </select>
       </div>
       <fieldset class="campo">
@@ -140,7 +140,7 @@ import { site } from '../data/site';
     let escolheu = false;
     select.addEventListener('change', () => (escolheu = true));
 
-    // Se a pessoa tocou numa região do mapa, ela já vem marcada aqui
+    // Se a pessoa tocou numa região do mapa, o procedimento dela já vem marcado aqui
     document.addEventListener('mapa:regiao', (e) => {
       const nome = (e as CustomEvent<string>).detail;
       if (!escolheu && [...select.options].some((o) => o.value === nome)) select.value = nome;

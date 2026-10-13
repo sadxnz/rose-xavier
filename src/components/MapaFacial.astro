@@ -56,7 +56,14 @@ import { marcar } from '../data/pendente';
       {
         regioes.map((r) => (
           <li>
-            <button type="button" class="chip" aria-pressed="false" aria-controls="mapa-painel" data-regiao={r.id}>
+            <button
+              type="button"
+              class="chip"
+              aria-pressed="false"
+              aria-controls="mapa-painel"
+              data-regiao={r.id}
+              data-formulario={r.formulario}
+            >
               {r.nome}
             </button>
           </li>
@@ -305,8 +312,8 @@ import { marcar } from '../data/pendente';
         rosto.scrollIntoView({ block: 'start', behavior: semMovimento.matches ? 'auto' : 'smooth' });
       }
       painel.querySelector<HTMLElement>(`.conteudo[data-regiao="${id}"] h3`)?.focus({ preventScroll: true });
-      const nome = botaoDe(id)?.textContent?.trim();
-      if (nome) document.dispatchEvent(new CustomEvent('mapa:regiao', { detail: nome }));
+      const procedimento = botaoDe(id)?.dataset.formulario;
+      if (procedimento) document.dispatchEvent(new CustomEvent('mapa:regiao', { detail: procedimento }));
     }
 
     function fecharPainel(devolverFoco = true) {
