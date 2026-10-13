@@ -1,0 +1,114 @@
+---
+import { Picture } from 'astro:assets';
+import preparo1 from '../assets/fotos/preparo-1.jpg';
+import preparo2 from '../assets/fotos/preparo-2.jpg';
+import { etapas } from '../data/conteudo';
+import { marcar } from '../data/pendente';
+---
+
+<section id="atendimento" class="secao fundo-pedra" aria-labelledby="atend-titulo">
+  <div class="wrap">
+    <h2 id="atend-titulo">Como é o atendimento</h2>
+    <ol role="list" class="etapas">
+      {
+        etapas.map((e, i) => (
+          <li class:list={['etapa', { 'com-fotos': i === 2 }]}>
+            <span class="n">{i + 1}</span>
+            <div class="corpo">
+              <h3>{e.titulo}</h3>
+              <p set:html={marcar(e.texto)} />
+            </div>
+            {i === 2 && (
+              <div class="fotos">
+                <Picture
+                  src={preparo1}
+                  formats={['avif', 'webp']}
+                  widths={[360, 540, 720, 1000]}
+                  sizes="(min-width: 960px) 340px, calc(100vw - 2 * var(--margem) - 64px)"
+                  alt="Rose, de jaleco, máscara e luvas, prepara a seringa antes da aplicação."
+                  class="f1"
+                />
+                <Picture
+                  src={preparo2}
+                  formats={['avif', 'webp']}
+                  widths={[220, 330, 440, 660]}
+                  sizes="(min-width: 960px) 220px, 56vw"
+                  alt="Mãos de luvas preparando a seringa. No jaleco, o crachá dourado com o nome Rose Xavier."
+                  class="f2"
+                />
+              </div>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .etapas {
+    margin-top: 48px;
+    padding: 0;
+    list-style: none;
+  }
+  .etapa {
+    position: relative;
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    column-gap: 16px;
+    padding-bottom: 40px;
+  }
+  /* Filete dourado ligando as etapas, como os filetes do revestimento */
+  .etapa:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: 56px;
+    bottom: 10px;
+    left: 23px;
+    width: 1px;
+    background: var(--latao-fundo);
+  }
+  .etapa:last-child { padding-bottom: 0; }
+  .n {
+    font: 500 2.5rem / 1.1 var(--serif);
+    font-variant-numeric: lining-nums;
+    color: var(--latao-fundo);
+    text-align: center;
+  }
+  .corpo { padding-top: 6px; }
+  .corpo p { margin-top: 8px; max-width: 46ch; }
+
+  .fotos {
+    grid-column: 2;
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .fotos :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .fotos :global(.f1) { aspect-ratio: 4 / 5; }
+  .fotos :global(.f2) { width: 64%; aspect-ratio: 744 / 615; }
+
+  @media (min-width: 960px) {
+    .etapa {
+      grid-template-columns: 64px minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: 24px;
+      padding-bottom: 48px;
+    }
+    .etapa:not(:last-child)::before { left: 31px; }
+    .n { font-size: 3rem; }
+    .fotos {
+      grid-column: 3;
+      grid-row: 1 / 3;
+      grid-template-columns: 3fr 2fr;
+      align-items: end;
+      max-width: 540px;
+      margin-top: 6px;
+    }
+    .fotos :global(.f1) { aspect-ratio: 1; object-position: 50% 30%; }
+    .fotos :global(.f2) { width: 100%; }
+  }
+</style>

@@ -1,0 +1,120 @@
+---
+import { Picture } from 'astro:assets';
+import recepcao from '../assets/fotos/rose-recepcao.jpg';
+import { site } from '../data/site';
+---
+
+<section class="abertura" aria-labelledby="nome">
+  <div class="wrap grade">
+    <div class="arco">
+      <Picture
+        src={recepcao}
+        formats={['avif', 'webp']}
+        widths={[300, 450, 600, 800, 1050]}
+        sizes="(min-width: 960px) 525px, min(300px, 78vw)"
+        alt="Rose Xavier, de macacão preto, em pé na recepção do Clinical Hub, ao lado do arco iluminado com o nome da clínica."
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+    <div class="texto">
+      <h1 id="nome">{site.nome}</h1>
+      <p class="profissao">{site.profissao}</p>
+      <p class="slogan">{site.slogan}</p>
+      <a class="botao" href="#agendar" data-cta-abertura>Agendar avaliação</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .abertura { padding-block: 24px 64px; }
+  .grade {
+    display: grid;
+    justify-items: center;
+  }
+
+  /* O arco da recepção: topo em semicírculo, laterais retas */
+  .arco {
+    width: min(300px, 78vw);
+    aspect-ratio: 3 / 4;
+    border-radius: 999px 999px 0 0;
+    overflow: hidden;
+    background: var(--pedra);
+  }
+  .arco :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* O arco pisa numa linha de chão */
+  .texto {
+    width: 100%;
+    padding-top: 28px;
+    border-top: 1px solid var(--veio);
+    text-align: center;
+  }
+  h1 {
+    font-size: var(--t-nome);
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+  }
+  .profissao {
+    margin-top: 14px;
+    font-size: var(--t-lead);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .slogan {
+    margin-top: 2px;
+    font-size: var(--t-lead);
+    line-height: 1.3;
+    color: var(--gaveta-2);
+  }
+  .botao { margin-top: 28px; }
+
+  @media (min-width: 960px) {
+    .abertura {
+      position: relative;
+      display: flex;
+      min-height: min(100svh, 940px);
+      padding: 0;
+    }
+    /* Parede de ripado atrás do arco, da metade até a borda da tela */
+    .abertura::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 0 calc(50% + 40px);
+      background: repeating-linear-gradient(
+        90deg,
+        var(--madeira-sombra) 0 3px,
+        var(--madeira) 3px 24px
+      );
+    }
+    .grade {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: 24px;
+      align-items: end;
+      padding-top: 120px;
+    }
+    /* O arco fica no meio da parede, com ripas dos dois lados, e pisa no chão */
+    .arco {
+      position: absolute;
+      bottom: 0;
+      left: calc(75% + 20px);
+      transform: translateX(-50%);
+      width: auto;
+      height: min(74svh, 700px, (50vw - 104px) * 4 / 3);
+    }
+    .texto {
+      position: relative;
+      grid-column: 1 / 7;
+      justify-self: start;
+      padding: 0 0 80px;
+      border-top: 0;
+      text-align: left;
+    }
+    .profissao { margin-top: 22px; }
+    .botao { margin-top: 36px; }
+  }
+</style>

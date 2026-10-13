@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import Topo from '../components/Topo.astro';
+import Abertura from '../components/Abertura.astro';
+import QuemAtende from '../components/QuemAtende.astro';
+import MapaFacial from '../components/MapaFacial.astro';
+import Procedimentos from '../components/Procedimentos.astro';
+import Atendimento from '../components/Atendimento.astro';
+import Galeria from '../components/Galeria.astro';
+import Espaco from '../components/Espaco.astro';
+import Duvidas from '../components/Duvidas.astro';
+import Agendar from '../components/Agendar.astro';
+import Rodape from '../components/Rodape.astro';
+import CtaFixo from '../components/CtaFixo.astro';
+import { site, linkInstagram } from '../data/site';
+
+const url = Astro.site!.href;
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'HealthAndBeautyBusiness',
+  name: 'Rose Xavier, Enfermeira',
+  description: 'Estética injetável com avaliação presencial no Clinical Hub, em Fortaleza.',
+  url,
+  image: new URL('/og-rose-recepcao.jpg', url).href,
+  telephone: '+55 85 99121-1235',
+  areaServed: site.cidade,
+  address: {
+    '@type': 'PostalAddress',
+    ...(site.endereco ? { streetAddress: site.endereco } : {}),
+    addressLocality: site.cidade,
+    addressRegion: site.uf,
+    addressCountry: 'BR',
+  },
+  sameAs: [linkInstagram],
+  employee: {
+    '@type': 'Person',
+    name: site.nome,
+    jobTitle: site.profissao,
+    hasCredential: {
+      '@type': 'EducationalOccupationalCredential',
+      credentialCategory: 'Registro profissional',
+      name: site.coren,
+    },
+  },
+};
+---
+
+<Base
+  titulo="Rose Xavier, enfermeira em estética injetável em Fortaleza"
+  descricao="Estética injetável com avaliação presencial no Clinical Hub, em Fortaleza. Coren-CE nº 554751. Agende pelo WhatsApp."
+  jsonld={jsonld}
+>
+  <Topo />
+  <main id="conteudo">
+    <Abertura />
+    <QuemAtende />
+    <MapaFacial />
+    <Procedimentos />
+    <Atendimento />
+    {site.galeriaAtiva && <Galeria />}
+    <Espaco />
+    <Duvidas />
+    <Agendar />
+  </main>
+  <Rodape />
+  <CtaFixo />
+</Base>

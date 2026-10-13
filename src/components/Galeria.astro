@@ -1,0 +1,61 @@
+---
+// Galeria de fotos com paciente. Desligada por padrão (site.galeriaAtiva = false).
+// Só ligar com autorização de imagem por escrito. Nunca usar para antes e depois.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { legendas } from '../data/galeria';
+import { marcar } from '../data/pendente';
+
+const arquivos = import.meta.glob<{ default: ImageMetadata }>('../assets/galeria/*.{jpg,jpeg,png,webp}', {
+  eager: true,
+});
+const fotos = Object.entries(arquivos).map(([caminho, mod]) => {
+  const nome = caminho.split('/').pop()!;
+  return { src: mod.default, legenda: legendas[nome] ?? '[PREENCHER: descrição da foto]' };
+});
+---
+
+{
+  fotos.length > 0 && (
+    <section class="secao" aria-labelledby="galeria-titulo">
+      <div class="wrap">
+        <h2 id="galeria-titulo">No consultório</h2>
+        <ul role="list" class="lista">
+          {fotos.map((f) => (
+            <li>
+              <figure>
+                <Picture
+                  src={f.src}
+                  formats={['avif', 'webp']}
+                  widths={[360, 540, 720]}
+                  sizes="(min-width: 960px) 380px, calc(100vw - 2 * var(--margem))"
+                  alt={f.legenda.replace(/\[[^\]]*\]/g, '').trim()}
+                />
+                <figcaption set:html={marcar(f.legenda)} />
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .lista {
+    display: grid;
+    gap: 24px;
+    margin-top: 40px;
+    padding: 0;
+    list-style: none;
+  }
+  figcaption {
+    margin-top: 10px;
+    font-size: var(--t-peq);
+    color: var(--gaveta-2);
+  }
+  .lista :global(img) { width: 100%; height: auto; }
+  @media (min-width: 960px) {
+    .lista { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+</style>

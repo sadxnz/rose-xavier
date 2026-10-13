@@ -1,0 +1,83 @@
+---
+import Concha from './Concha.astro';
+import { procedimentos } from '../data/conteudo';
+import { marcar } from '../data/pendente';
+
+const campos = [
+  ['oQueE', 'O que é'],
+  ['duracao', 'Duração da sessão'],
+  ['retorno', 'Retorno'],
+  ['cuidados', 'Cuidados depois'],
+] as const;
+---
+
+<section id="procedimentos" class="secao" aria-labelledby="proc-titulo">
+  <div class="coluna">
+    <h2 id="proc-titulo">Procedimentos</h2>
+    <p class="intro">Toque no nome para ver como funciona. Tudo aqui depende da avaliação presencial.</p>
+    <div class="indice">
+      {
+        procedimentos.map((p) => (
+          <details>
+            <summary>
+              <span class="nome" set:html={marcar(p.nome)} />
+              <Concha />
+            </summary>
+            <dl>
+              {campos.map(([chave, rotulo]) => (
+                <div>
+                  <dt>{rotulo}</dt>
+                  <dd set:html={marcar(p[chave])} />
+                </div>
+              ))}
+            </dl>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .coluna {
+    width: min(100% - 2 * var(--margem), 760px);
+    margin-inline: auto;
+  }
+  .intro { margin-top: 16px; max-width: 44ch; }
+  .indice {
+    margin-top: 40px;
+    border-top: 1px solid var(--veio);
+  }
+  details { border-bottom: 1px solid var(--veio); }
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 64px;
+    padding-block: 18px;
+    color: var(--latao-fundo);
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  .nome {
+    color: var(--gaveta);
+    font: 500 var(--t-h3) / 1.15 var(--serif);
+  }
+  dl {
+    display: grid;
+    gap: 18px;
+    padding: 4px 0 28px;
+  }
+  dt {
+    font-size: var(--t-peq);
+    font-weight: 500;
+    color: var(--gaveta-2);
+  }
+  dd { margin-top: 2px; }
+
+  @media (min-width: 720px) {
+    dl { grid-template-columns: 1fr 1fr; column-gap: 40px; }
+  }
+</style>

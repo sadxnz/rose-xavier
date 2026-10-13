@@ -1,0 +1,344 @@
+---
+import { regioes } from '../data/regioes';
+import { linkWhatsApp } from '../data/site';
+import { marcar } from '../data/pendente';
+---
+
+<section id="mapa" class="secao escuro mapa" aria-labelledby="mapa-titulo" data-mapa>
+  <div class="wrap grade">
+    <div class="intro">
+      <h2 id="mapa-titulo">Toque numa região do rosto</h2>
+      <p>
+        Veja o que eu costumo avaliar em cada parte. O que fazer, e se vale fazer, a gente decide junto
+        na avaliação presencial.
+      </p>
+    </div>
+
+    <div class="rosto">
+      <!-- Desenho original em traço fino; a lista de botões ao lado é o caminho acessível -->
+      <svg viewBox="48 26 204 374" aria-hidden="true" focusable="false">
+        <g class="traco">
+          <path d="M82 150C80 186 84 222 96 252S128 318 150 326C172 318 192 284 204 252S220 186 218 150" />
+          <path d="M82 150C76 100 106 66 150 64S224 100 218 150" />
+          <path d="M132 50C132 38 142 32 150 32S168 38 168 50 160 63 150 63 132 58 132 50Z" />
+          <path d="M90 132C100 100 124 88 150 88S200 100 210 132" />
+          <path class="fio" d="M100 118C108 92 124 74 142 64M122 96C129 82 138 72 146 65M200 118C192 92 176 74 158 64M178 96C171 82 162 72 154 65" />
+          <path d="M82 168C70 164 66 180 70 194S78 210 86 208M218 168C230 164 234 180 230 194S222 210 214 208" />
+          <path d="M116 306C118 334 116 360 108 398M184 306C182 334 184 360 192 398" />
+          <path d="M100 156C110 147 126 146 139 151M161 151C174 146 190 147 200 156" />
+          <path d="M105 182C113 189 127 189 135 182M165 182C173 189 187 189 195 182" />
+          <path d="M143 162C143 190 139 214 135 228 133 234 137 238 142 237 146 240 154 240 158 237 163 238 167 234 165 228" />
+          <path d="M126 266C134 261 142 258 150 262 158 258 166 261 174 266M126 266C138 270 162 270 174 266M130 268C138 281 162 281 170 268" />
+        </g>
+        {
+          regioes.map((r) => (
+            <g class="regiao" data-regiao={r.id}>
+              <mask id={`m-${r.id}`} maskUnits="userSpaceOnUse" x="0" y="0" width="300" height="400">
+                {r.marca.map((d) => (
+                  <path class="revela" d={d} pathLength="1" />
+                ))}
+              </mask>
+              {r.area.map((d) => (
+                <path class="area" d={d} />
+              ))}
+              <g mask={`url(#m-${r.id})`}>
+                {r.marca.map((d) => (
+                  <path class="marca" d={d} />
+                ))}
+              </g>
+            </g>
+          ))
+        }
+      </svg>
+    </div>
+
+    <ul class="lista" role="list" aria-label="Regiões do rosto">
+      {
+        regioes.map((r) => (
+          <li>
+            <button type="button" class="chip" aria-pressed="false" aria-controls="mapa-painel" data-regiao={r.id}>
+              {r.nome}
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div id="mapa-painel" class="painel" data-aberto="false">
+      <p class="vazio">Escolha uma região no desenho ou na lista.</p>
+      {
+        regioes.map((r) => (
+          <div class="conteudo" data-regiao={r.id} hidden>
+            <h3 tabindex="-1">{r.nome}</h3>
+            <p class="rotulo">O que costuma ser avaliado</p>
+            <p set:html={marcar(r.avaliado)} />
+            <p class="rotulo">Procedimentos possíveis, sujeitos à avaliação</p>
+            <ul role="list">
+              {r.procedimentos.map((p) => (
+                <li set:html={marcar(p)} />
+              ))}
+            </ul>
+            <a
+              class="botao perguntar"
+              href={linkWhatsApp(`Olá, Rose! Vim pelo site e queria perguntar sobre a região: ${r.nome}.`)}
+              target="_blank"
+              rel="noopener"
+            >
+              Perguntar sobre essa região
+            </a>
+          </div>
+        ))
+      }
+      <button type="button" class="fechar" hidden>Fechar</button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grade {
+    display: grid;
+    gap: 28px;
+  }
+  .intro p {
+    max-width: 38ch;
+    margin-top: 16px;
+  }
+
+  .rosto { scroll-margin-top: 12px; }
+  svg {
+    height: min(48svh, 420px);
+    width: auto;
+    margin-inline: auto;
+    overflow: visible;
+  }
+  .traco .fio { opacity: 0.55; }
+  .traco path {
+    fill: none;
+    stroke: var(--pedra);
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .area {
+    fill: transparent;
+    cursor: pointer;
+    transition: fill 0.15s;
+  }
+  .regiao:hover .area { fill: rgb(232 169 185 / 0.12); }
+  .regiao.ativa .area { fill: rgb(232 169 185 / 0.14); }
+
+  /* O lápis branco: tracejado revelado por uma máscara que "desenha" o caminho */
+  .marca {
+    fill: none;
+    stroke: var(--branco);
+    stroke-width: 1.7;
+    stroke-dasharray: 4 4;
+    stroke-linecap: round;
+  }
+  .revela {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 8;
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: 1;
+  }
+  .regiao.ativa .revela {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+    list-style: none;
+  }
+  .chip {
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid var(--veio);
+    border-radius: var(--r-gaveta);
+    background: none;
+    color: var(--pedra);
+    font: 400 1rem / 1.2 var(--sans);
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .chip:hover { border-color: var(--pedra); }
+  .chip[aria-pressed="true"] {
+    background: var(--rosa);
+    border-color: var(--rosa);
+    color: var(--gaveta);
+  }
+
+  .painel .rotulo {
+    margin-top: 18px;
+    font-size: var(--t-peq);
+    font-weight: 500;
+  }
+  .painel h3 + .rotulo { margin-top: 12px; }
+  .painel ul {
+    padding: 0;
+    list-style: none;
+  }
+  .perguntar { margin-top: 24px; }
+  .fechar {
+    min-height: 44px;
+    padding: 8px 4px;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: 500 var(--t-peq) / 1 var(--sans);
+    text-decoration: underline;
+    text-underline-offset: 0.22em;
+    cursor: pointer;
+  }
+  h3:focus { outline: none; }
+  h3:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; box-shadow: none; }
+
+  /* Celular: o painel é uma folha que sobe da base, clara, sobre o fundo escuro */
+  @media (max-width: 959.98px) {
+    .vazio { display: none; }
+    .painel {
+      position: fixed;
+      inset: auto 0 0;
+      z-index: 30;
+      max-height: calc(100svh - min(48svh, 420px) - 24px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 22px var(--margem) calc(24px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--latao);
+      border-radius: var(--r-folha) var(--r-folha) 0 0;
+      background: var(--branco);
+      color: var(--gaveta);
+      transform: translateY(100%);
+      visibility: hidden;
+      transition: transform 0.22s ease-out, visibility 0.22s;
+    }
+    .painel[data-aberto="true"] {
+      transform: none;
+      visibility: visible;
+    }
+    .painel h3 {
+      color: var(--gaveta);
+      padding-right: 72px;
+    }
+    .painel .rotulo { color: var(--latao-fundo); }
+    .perguntar { width: 100%; }
+    .fechar {
+      position: absolute;
+      top: 14px;
+      right: var(--margem);
+    }
+    .painel :focus-visible {
+      outline-color: var(--gaveta);
+      box-shadow: 0 0 0 6px var(--rosa);
+    }
+  }
+
+  /* Desktop: lista | rosto | painel ao lado, separado por um filete de latão */
+  @media (min-width: 960px) {
+    .grade {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 4fr) minmax(0, 4fr);
+      grid-template-areas:
+        "intro intro ."
+        "lista rosto painel";
+      align-items: start;
+      column-gap: clamp(24px, 3vw, 48px);
+      row-gap: 32px;
+    }
+    .intro { grid-area: intro; max-width: 640px; }
+    .intro p { max-width: 46ch; }
+    .lista { grid-area: lista; align-content: start; }
+    .rosto { grid-area: rosto; align-self: center; }
+    svg { height: min(62svh, 500px); }
+    .painel {
+      grid-area: painel;
+      align-self: center;
+      position: relative;
+      min-height: 340px;
+      padding-left: 32px;
+      border-left: 1px solid var(--latao);
+    }
+    .vazio { color: var(--pedra); max-width: 24ch; }
+    .painel .rotulo { color: var(--latao); }
+    .perguntar { background: var(--latao); color: var(--gaveta); }
+    .perguntar:hover { background: #c9ad72; }
+    .fechar { margin-top: 12px; }
+  }
+</style>
+
+<script>
+  const raiz = document.querySelector<HTMLElement>('[data-mapa]');
+  if (raiz) {
+    const botoes = [...raiz.querySelectorAll<HTMLButtonElement>('.chip')];
+    const regioes = [...raiz.querySelectorAll<SVGGElement>('.regiao')];
+    const painel = raiz.querySelector<HTMLElement>('.painel')!;
+    const conteudos = [...painel.querySelectorAll<HTMLElement>('.conteudo')];
+    const vazio = painel.querySelector<HTMLElement>('.vazio')!;
+    const fechar = painel.querySelector<HTMLButtonElement>('.fechar')!;
+    const rosto = raiz.querySelector<HTMLElement>('.rosto')!;
+    const desktop = matchMedia('(min-width: 960px)');
+    const semMovimento = matchMedia('(prefers-reduced-motion: reduce)');
+    let atual: string | null = null;
+
+    const botaoDe = (id: string) => botoes.find((b) => b.dataset.regiao === id);
+
+    function abrir(id: string) {
+      if (atual === id) return fecharPainel();
+      atual = id;
+      botoes.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.regiao === id)));
+      regioes.forEach((g) => g.classList.remove('ativa'));
+      const g = regioes.find((r) => r.dataset.regiao === id);
+      if (g) {
+        g.getBoundingClientRect(); // reinicia o traço
+        g.classList.add('ativa');
+      }
+      conteudos.forEach((c) => (c.hidden = c.dataset.regiao !== id));
+      vazio.hidden = true;
+      fechar.hidden = false;
+      painel.dataset.aberto = 'true';
+      document.documentElement.classList.add('painel-aberto');
+      if (!desktop.matches) {
+        rosto.scrollIntoView({ block: 'start', behavior: semMovimento.matches ? 'auto' : 'smooth' });
+      }
+      painel.querySelector<HTMLElement>(`.conteudo[data-regiao="${id}"] h3`)?.focus({ preventScroll: true });
+      const nome = botaoDe(id)?.textContent?.trim();
+      if (nome) document.dispatchEvent(new CustomEvent('mapa:regiao', { detail: nome }));
+    }
+
+    function fecharPainel(devolverFoco = true) {
+      if (!atual) return;
+      const id = atual;
+      atual = null;
+      const focoNoPainel = painel.contains(document.activeElement);
+      botoes.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+      regioes.forEach((g) => g.classList.remove('ativa'));
+      conteudos.forEach((c) => (c.hidden = true));
+      vazio.hidden = false;
+      fechar.hidden = true;
+      painel.dataset.aberto = 'false';
+      document.documentElement.classList.remove('painel-aberto');
+      if (devolverFoco && focoNoPainel) botaoDe(id)?.focus();
+    }
+
+    botoes.forEach((b) => b.addEventListener('click', () => abrir(b.dataset.regiao!)));
+    regioes.forEach((g) => g.addEventListener('click', () => abrir(g.dataset.regiao!)));
+    fechar.addEventListener('click', () => fecharPainel());
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && atual) fecharPainel();
+    });
+
+    // No celular a folha não segue a pessoa: fecha se o foco sair dela ou se o mapa sair da tela
+    painel.addEventListener('focusout', (e) => {
+      const destino = e.relatedTarget as Node | null;
+      if (!desktop.matches && atual && destino && !painel.contains(destino)) fecharPainel(false);
+    });
+    new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting && !desktop.matches) fecharPainel(false);
+    }).observe(raiz);
+    desktop.addEventListener('change', () => fecharPainel(false));
+  }
+</script>

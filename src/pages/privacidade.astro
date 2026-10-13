@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import Rodape from '../components/Rodape.astro';
+import { marcar } from '../data/pendente';
+import { site } from '../data/site';
+
+const contato = '[PREENCHER: e-mail ou outro canal para pedidos sobre dados pessoais]';
+const atualizacao = '[PREENCHER: data da última atualização]';
+---
+
+<Base
+  titulo="Política de privacidade do site da Rose Xavier"
+  descricao="Como o site da Rose Xavier trata seus dados: nada é salvo aqui, a mensagem de agendamento abre no seu WhatsApp."
+>
+  <main class="politica">
+    <a class="voltar" href="/">Voltar para o site</a>
+    <h1>Política de privacidade</h1>
+    <p class="atualizacao" set:html={`Última atualização: ${marcar(atualizacao)}`} />
+
+    <h2>O que este site coleta</h2>
+    <p>
+      Nada fica salvo neste site. O formulário de agendamento só monta uma mensagem no seu próprio aparelho e abre o
+      WhatsApp. Você vê a mensagem antes e decide se envia.
+    </p>
+    <p>O formulário não pede dados de saúde. Essas informações são tratadas só na consulta, pessoalmente.</p>
+
+    <h2>Cookies e medição</h2>
+    <p>Este site não usa cookies, pixels de anúncio nem ferramentas de análise de visitas.</p>
+
+    <h2>Hospedagem</h2>
+    <p>
+      O site fica hospedado na Vercel, que pode registrar dados técnicos de acesso, como endereço IP e navegador, para
+      manter o serviço funcionando e seguro.
+    </p>
+
+    <h2>WhatsApp e Instagram</h2>
+    <p>
+      Quando você envia uma mensagem pelo WhatsApp ou abre o Instagram, valem as políticas de privacidade dessas
+      plataformas. As conversas pelo WhatsApp são usadas só para agendar e acompanhar o seu atendimento.
+    </p>
+
+    <h2>Seus direitos</h2>
+    <p>
+      Pela Lei Geral de Proteção de Dados (LGPD), você pode pedir acesso, correção ou exclusão dos seus dados pessoais.
+    </p>
+    <p set:html={`Responsável: ${site.nome}, ${site.profissao}, ${site.coren}. Contato: ${marcar(contato)}`} />
+  </main>
+  <Rodape />
+</Base>
+
+<style>
+  .politica {
+    width: min(100% - 2 * var(--margem), 680px);
+    margin-inline: auto;
+    padding-block: 48px 96px;
+  }
+  .voltar {
+    display: inline-block;
+    padding-block: 8px;
+  }
+  h1 {
+    margin-top: 32px;
+    font-size: var(--t-h2);
+    line-height: 1.05;
+  }
+  .atualizacao {
+    margin-top: 12px;
+    font-size: var(--t-peq);
+    color: var(--gaveta-2);
+  }
+  h2 {
+    margin-top: 48px;
+    font-size: var(--t-h3);
+    line-height: 1.15;
+  }
+  p { margin-top: 12px; max-width: 60ch; }
+</style>

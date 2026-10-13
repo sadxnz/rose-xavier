@@ -1,0 +1,51 @@
+---
+import { linkWhatsApp, mensagemPadrao } from '../data/site';
+---
+
+<!-- Só no celular: aparece quando o botão da abertura sai da tela e some no formulário e no rodapé -->
+<div class="cta-fixo" data-visivel="false">
+  <a class="botao" href={linkWhatsApp(mensagemPadrao)} target="_blank" rel="noopener">Agendar pelo WhatsApp</a>
+</div>
+
+<style>
+  .cta-fixo {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 20;
+    padding: 12px var(--margem) calc(12px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--veio);
+    background: var(--branco);
+    transition: transform 0.2s ease-out, visibility 0.2s;
+  }
+  .botao { width: 100%; }
+  :global(.js) .cta-fixo[data-visivel="false"],
+  :global(.painel-aberto) .cta-fixo {
+    transform: translateY(100%);
+    visibility: hidden;
+  }
+  @media (min-width: 960px) {
+    .cta-fixo { display: none; }
+  }
+</style>
+
+<script>
+  const cta = document.querySelector<HTMLElement>('.cta-fixo');
+  const abertura = document.querySelector('[data-cta-abertura]');
+  const fim = [document.getElementById('agendar'), document.querySelector('footer')].filter(Boolean) as Element[];
+  if (cta && abertura) {
+    let aberturaVisivel = true;
+    const fimVisivel = new Set<Element>();
+    const atualizar = () => {
+      cta.dataset.visivel = String(!aberturaVisivel && fimVisivel.size === 0);
+    };
+    new IntersectionObserver(([e]) => {
+      aberturaVisivel = e.isIntersecting;
+      atualizar();
+    }).observe(abertura);
+    const obs = new IntersectionObserver((entradas) => {
+      entradas.forEach((e) => (e.isIntersecting ? fimVisivel.add(e.target) : fimVisivel.delete(e.target)));
+      atualizar();
+    });
+    fim.forEach((el) => obs.observe(el));
+  }
+</script>

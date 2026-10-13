@@ -1,0 +1,59 @@
+---
+// Navegação só no desktop. No celular o nome já é a primeira coisa da página.
+const itens = [
+  ['#quem-atende', 'Quem atende'],
+  ['#mapa', 'Mapa do rosto'],
+  ['#procedimentos', 'Procedimentos'],
+  ['#atendimento', 'Atendimento'],
+  ['#duvidas', 'Dúvidas'],
+];
+---
+
+<a class="pular" href="#conteudo">Ir para o conteúdo</a>
+<header class="topo">
+  <nav class="wrap" aria-label="Seções">
+    <ul role="list">
+      {itens.map(([href, rotulo]) => <li><a href={href}>{rotulo}</a></li>)}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .pular {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 50;
+    padding: 12px 16px;
+    background: var(--gaveta);
+    color: var(--branco);
+    border-radius: var(--r-gaveta);
+    transform: translateY(-200%);
+  }
+  .pular:focus-visible { transform: none; }
+
+  .topo { display: none; }
+
+  @media (min-width: 960px) {
+    .topo {
+      display: block;
+      position: absolute;
+      inset: 0 0 auto;
+      z-index: 5;
+      padding-top: 36px;
+    }
+    ul {
+      display: flex;
+      gap: clamp(20px, 2.2vw, 36px);
+      padding: 0;
+      list-style: none;
+    }
+    a {
+      display: inline-block;
+      padding-block: 8px;
+      font-size: clamp(0.9375rem, 0.85rem + 0.15vw, 1rem);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; text-decoration-thickness: 1px; }
+  }
+</style>

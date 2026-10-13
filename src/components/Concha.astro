@@ -1,0 +1,22 @@
+---
+// Indicador de abrir/fechar com a forma dos puxadores concha das gavetas.
+---
+
+<svg class="concha" viewBox="0 0 18 10" width="18" height="10" aria-hidden="true" focusable="false">
+  <path d="M1.5 1.5a7.5 7.5 0 0 0 15 0" />
+</svg>
+
+<style>
+  .concha {
+    flex: none;
+    overflow: visible;
+    transition: transform 0.2s;
+  }
+  path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+  :global(details[open]) > :global(summary) .concha { transform: rotate(180deg); }
+</style>

@@ -1,0 +1,56 @@
+---
+import Concha from './Concha.astro';
+import { duvidas } from '../data/conteudo';
+import { marcar } from '../data/pendente';
+---
+
+<section id="duvidas" class="secao fundo-pedra" aria-labelledby="duvidas-titulo">
+  <div class="coluna">
+    <h2 id="duvidas-titulo">Dúvidas</h2>
+    <div class="lista">
+      {
+        duvidas.map((d) => (
+          <details>
+            <summary>
+              <span class="pergunta">{d.pergunta}</span>
+              <Concha />
+            </summary>
+            <p set:html={marcar(d.resposta)} />
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .coluna {
+    width: min(100% - 2 * var(--margem), 760px);
+    margin-inline: auto;
+  }
+  .lista {
+    margin-top: 40px;
+    border-top: 1px solid var(--latao-fundo);
+  }
+  details { border-bottom: 1px solid var(--latao-fundo); }
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 64px;
+    padding-block: 18px;
+    color: var(--latao-fundo);
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  .pergunta {
+    color: var(--gaveta);
+    font: 500 var(--t-h3) / 1.15 var(--serif);
+  }
+  details p {
+    max-width: 52ch;
+    padding-bottom: 24px;
+  }
+</style>
