@@ -27,7 +27,7 @@ As fotos reais estão em ./fotos. Abra e olhe cada uma antes de decidir qualquer
 - Astro com saída estática + CSS próprio com custom properties. Sem Tailwind, sem shadcn, sem biblioteca de componentes, sem GSAP. JavaScript só onde há interação.
 - Imagens pelo `<Picture>` do Astro: AVIF/WebP, srcset, lazy abaixo da dobra, EXIF removido (fotos de iPhone podem carregar localização GPS).
 - Fontes auto-hospedadas em woff2, subset latin, com fallback.
-- Deploy na Vercel.
+- Deploy na Cloudflare Pages (saída estática do Astro, pasta dist).
 
 ## Seções, nesta ordem
 1. Abertura: rose-recepcao dentro da forma do arco. Nome, "Enfermeira" e [SLOGAN DA ROSE]. Um botão só: "Agendar avaliação". Nada de número grande com estatística.

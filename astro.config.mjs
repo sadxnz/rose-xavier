@@ -1,8 +1,8 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  // [PREENCHER: domínio final do site] — usado no Open Graph, canonical e JSON-LD
-  site: 'https://rosexavier.vercel.app',
+  // Domínio do site — usado no Open Graph, canonical e JSON-LD
+  site: 'https://rose-xavier.pages.dev',
   build: {
     inlineStylesheets: 'always',
   },

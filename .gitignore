@@ -2,5 +2,7 @@ node_modules/
 dist/
 .astro/
 .vercel/
+.wrangler/
+.env*
 # fotos originais: o site usa as versões tratadas em src/assets/fotos
 /fotos/
